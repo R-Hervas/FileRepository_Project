@@ -46,11 +46,11 @@ public class ClientHandler extends Thread {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            listener.onMessageRecived(this, ClientListener.CLIENT_NOTIFY_ERROR, ClientListener.MESSAGE_TYPE_NOTIFY);
         }
     }
 
-    private void sendMessage(String msg) {
+     public void sendMessage(String msg) {
         try {
             new PrintWriter(socket.getOutputStream(), true).println(msg);
         } catch (IOException e) {
