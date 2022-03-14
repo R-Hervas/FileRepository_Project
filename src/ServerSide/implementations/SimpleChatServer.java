@@ -5,7 +5,6 @@ import ServerSide.classes.ServerBase;
 
 public class SimpleChatServer extends ServerBase {
 
-
     public SimpleChatServer(String name, int port) {
         super(name, port);
     }

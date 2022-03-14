@@ -128,7 +128,6 @@ public class ServerBase implements ServerInterface {
     /* Must be overriden */
     @Override
     public void onClientConnected(ClientHandler client) {
-
     }
 
     @Override
