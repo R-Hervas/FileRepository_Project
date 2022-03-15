@@ -21,7 +21,7 @@ public class RepoGestor {
         return repoGestor;
     }
 
-    public void loadFilesInRepository() {
+    private void loadFilesInRepository() {
         File repositoryFolder = new File("Files/Server_Files");
         File[] filesInRepository = repositoryFolder.listFiles(new TxtFileFilter());
 
@@ -49,16 +49,18 @@ public class RepoGestor {
 
     public FileResource createFile(String fileName) {
         FileResource newFile = null;
-        if (this.findFileName(fileName) == null)
+        if (this.findFileByName(fileName) == null)
             fileResources.add(newFile = new FileResource(fileName));
         return newFile;
     }
 
-    public FileResource findFileName(String fileName){
+    public FileResource findFileByName(String fileName){
         for (FileResource fileResource : fileResources) {
             if (fileResource.getName().equals(fileName))
                 return fileResource;
         }
         return null;
     }
+
+
 }

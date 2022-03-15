@@ -1,12 +1,11 @@
 package ServerSide.classes;
 
+import ServerSide.Models.FileResource;
 import ServerSide.interfaces.ClientListener;
 import ServerSide.interfaces.ServerInterface;
+import ServerSide.interfaces.TextFileServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -18,6 +17,7 @@ public class ClientHandler extends Thread {
     private ClientListener listener;
     private String clientName;
     private boolean isRunning;
+    private FileResource fileResource;
 
     public ClientHandler(Socket socket, ClientListener listener) {
 
@@ -60,14 +60,13 @@ public class ClientHandler extends Thread {
 
     private void handleMessage(String msg) {
 
-
         listener.onMessageRecived(this, msg, ClientListener.MESSAGE_TYPE_CLIENT);
 
         if(msg.equals(ClientListener.CLIENT_NOTIFY_DISCONNECT))
             notifyClientDisconnect(ClientListener.CLIENT_NOTIFY_DISCONNECT);
 
         if(msg.contains(ClientListener.CLIENT_MESSAGE_NAME))
-            this.clientName = msg.replace(ClientListener.CLIENT_MESSAGE_NAME, ""); // WTF THIS LINE??
+            this.clientName = msg.replace(ClientListener.CLIENT_MESSAGE_NAME, "");
 
     }
 
@@ -100,4 +99,46 @@ public class ClientHandler extends Thread {
     public String getIpAddress() {
         return this.socket.getRemoteSocketAddress().toString();
     }
+
+    public void setConnectionWithFile(FileResource fileResource) {
+        if (fileResource.connect())
+            this.fileResource = fileResource;
+        else
+            this.sendMessage("Recurso no disponible");
+    }
+
+    public void disconnectFromFile(){
+        if (this.fileResource != null){
+            fileResource.disconnect();
+            fileResource = null;
+        }
+    }
+
+    public void writeInResource(String newFileText){
+        if (this.isConnectedToResource()) {
+            try {
+                this.fileResource.setFileText(newFileText);
+            } catch (IOException e) {
+                sendMessage(TextFileServer.CLIENT_ERROR + "Error al acceder al archivo");
+                this.disconnectFromFile();
+            }
+        } else {
+            sendMessage(TextFileServer.CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
+        }
+    }
+
+    public String readFromResource(){
+        if (this.isConnectedToResource()) {
+            try {
+                return this.fileResource.getFileText();
+            } catch (IOException e) {
+                sendMessage(TextFileServer.CLIENT_ERROR + "Error al acceder al archivo");
+                this.disconnectFromFile();
+                return "";
+            }
+        } else
+            return "";
+    }
+
+    public boolean isConnectedToResource(){return (this.fileResource != null);}
 }

@@ -9,7 +9,6 @@ import java.util.concurrent.Semaphore;
 public class FileResource extends File {
 
     private Semaphore available = new Semaphore(1);
-    private ClientHandler clientConnected;
 
     public FileResource(String pathname) {
         super(pathname);
@@ -31,23 +30,12 @@ public class FileResource extends File {
         return available.availablePermits() == 1? true : false;
     }
 
-    public boolean userConnect(ClientHandler client){
-        if(available.tryAcquire()){
-            clientConnected = client;
-            return true;
-        } else {
-            return false;
-        }
+    public boolean connect() {
+        return available.tryAcquire();
     }
 
-    public boolean userDisconnect(){
-        if (clientConnected != null && !this.isAvailable()){
-            available.release();
-            clientConnected.sendMessage("Ya no tiene acceso al archivo del nombre: " + this.getName());
-            return true;
-        } else {
-            return false;
-        }
+    public void disconnect() {
+        available.release();
     }
 
     public void setFileText(String text) throws IOException {
