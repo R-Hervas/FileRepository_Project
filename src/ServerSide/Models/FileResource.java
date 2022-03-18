@@ -1,48 +1,58 @@
 package ServerSide.Models;
 
-import ServerSide.classes.ClientHandler;
-
 import java.io.*;
-import java.net.URI;
 import java.util.concurrent.Semaphore;
 
+/**
+ * Extends a file adding it a semaphore preventing collisions at accessing it and
+ * the methods needed to manage that semaphore. The main reason for a semaphore for
+ * every file is to avoid update overwriting.
+ */
 public class FileResource extends File {
 
-    private Semaphore available = new Semaphore(1);
+    /**
+     * Establish if the file is being used or not
+     */
+    private final Semaphore available = new Semaphore(1);
 
+    /**
+     * Constructor of the superclass
+     * @param pathname - A pathname string
+     */
     public FileResource(String pathname) {
         super(pathname);
     }
 
-    public FileResource(String parent, String child) {
-        super(parent, child);
-    }
-
-    public FileResource(File parent, String child) {
-        super(parent, child);
-    }
-
-    public FileResource(URI uri) {
-        super(uri);
-    }
-
-    public boolean isAvailable(){
-        return available.availablePermits() == 1? true : false;
-    }
-
+    /**
+     * Acquires the semaphore of the FileResource if it's possible
+     * @return true if the resource is available, false otherwise
+     */
     public boolean connect() {
         return available.tryAcquire();
     }
 
+    /**
+     * Release the semaphore of the FileResource
+     */
     public void disconnect() {
         available.release();
     }
 
+    /**
+     * Overwrites a String in the txt file associated
+     * @param text - Text to overwrite in the file
+     * @throws IOException - If file can't be accessed
+     */
     public void setFileText(String text) throws IOException {
         FileWriter fileWriter = new FileWriter(this, false);
         fileWriter.write(text);
     }
 
+    /**
+     * Gets the text of the txt file associated to the FileResource
+     * @return String - The file's text
+     * @throws IOException - If file can't be accessed
+     */
     public String getFileText() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(this));
         StringBuilder fileText = new StringBuilder();

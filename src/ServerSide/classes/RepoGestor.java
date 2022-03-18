@@ -4,6 +4,7 @@ import ServerSide.Models.FileResource;
 import ServerSide.helpers.TxtFileFilter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RepoGestor {
@@ -40,17 +41,20 @@ public class RepoGestor {
         StringBuilder fileList = new StringBuilder();
         if (fileResources.size() != 0) {
             for (File file : fileResources){
-                fileList.append(file.getName()).append("\n");
+                fileList.append(file.getName()).append("|");
             }
             return fileList.toString();
         }
         return "There's no files in the repository.";
     }
 
-    public FileResource createFile(String fileName) {
+    public FileResource createFile(String fileName) throws IOException {
         FileResource newFile = null;
-        if (this.findFileByName(fileName) == null)
-            fileResources.add(newFile = new FileResource(fileName));
+        if (this.findFileByName(fileName) == null) {
+            newFile = new FileResource("Files/Server_Files/" + fileName);
+            newFile.createNewFile();
+            fileResources.add(newFile);
+        }
         return newFile;
     }
 

@@ -3,11 +3,12 @@ package ServerSide.classes;
 import ServerSide.Models.FileResource;
 import ServerSide.interfaces.ClientListener;
 import ServerSide.interfaces.ServerInterface;
-import ServerSide.interfaces.TextFileServer;
+import ServerSide.interfaces.TextFileServerInterface;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.concurrent.ConcurrentLinkedDeque;
+
+import static ServerSide.interfaces.TextFileServerInterface.*;
 
 public class ClientHandler extends Thread {
 
@@ -111,6 +112,7 @@ public class ClientHandler extends Thread {
         if (this.fileResource != null){
             fileResource.disconnect();
             fileResource = null;
+            sendMessage(CLIENT_NOTIFICATION + "Liberando archivo");
         }
     }
 
@@ -118,12 +120,14 @@ public class ClientHandler extends Thread {
         if (this.isConnectedToResource()) {
             try {
                 this.fileResource.setFileText(newFileText);
+                this.disconnectFromFile();
+                sendMessage(CLIENT_NOTIFICATION + "Archivo actualizado");
             } catch (IOException e) {
-                sendMessage(TextFileServer.CLIENT_ERROR + "Error al acceder al archivo");
+                sendMessage(CLIENT_ERROR + "Error al acceder al archivo");
                 this.disconnectFromFile();
             }
         } else {
-            sendMessage(TextFileServer.CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
+            sendMessage(CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
         }
     }
 
@@ -132,7 +136,7 @@ public class ClientHandler extends Thread {
             try {
                 return this.fileResource.getFileText();
             } catch (IOException e) {
-                sendMessage(TextFileServer.CLIENT_ERROR + "Error al acceder al archivo");
+                sendMessage(CLIENT_ERROR + "Error al acceder al archivo");
                 this.disconnectFromFile();
                 return "";
             }
