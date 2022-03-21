@@ -8,10 +8,22 @@ import ServerSide.interfaces.TextFileServerInterface;
 
 import java.io.IOException;
 
+/**
+ * Implementation of server. This server has a repository which can be read, edited and created remotely by clients connected
+ * to the server.
+ */
 public class TextEditorServer extends ServerBase implements TextFileServerInterface {
 
+    /**
+     * Unique instance of the singleton class
+     */
     private final RepoGestor repository = RepoGestor.getRepoGestorInstance();
 
+    /**
+     * Constructor of the class
+     * @param name
+     * @param port - Must be known for the clients to connect to it
+     */
     public TextEditorServer(String name, int port) {
         super(name, port);
     }
@@ -75,15 +87,18 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
                 client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
             }
         } else if (message.matches("^" + CLIENT_CREATE_FILE + "[\\w ]+\\.txt?")){
+                String newFileName = message.replace(CLIENT_CREATE_FILE, "");
                 try {
-                    repository.createFile(message.replace(CLIENT_CREATE_FILE, ""));
-                    client.sendMessage(TextFileServerInterface.CLIENT_CREATE_FILE + message);
+                    if (repository.createFile(newFileName) != null)
+                        client.sendMessage(TextFileServerInterface.CLIENT_CREATE_FILE + newFileName);
+                    else
+                        client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "Error creando el archivo " + newFileName + ", Probablemente ya exista");
                 } catch (IOException e) {
                     client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El archivo no se puede crear");
                 }
         } else if (message.matches(CLIENT_GET_FILE_LIST)){
             client.sendMessage(CLIENT_GET_FILE_LIST + repository.getFileListAsString());
-        } else if (message.matches("^" + CLIENT_MESSAGE_NAME + "\\.*?")) {
+        } else if (message.matches("^" + CLIENT_MESSAGE_NAME + ".*?")) {
             System.out.println(getFormattedMessage(client, message.replace(CLIENT_MESSAGE_NAME, "") + "Se ha conectado al servidor"));
         } else {
             System.out.println("DEFAULT MESSAGE: " + getFormattedMessage(client, message));

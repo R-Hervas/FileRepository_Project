@@ -14,7 +14,7 @@ import static ServerSide.interfaces.TextFileServerInterface.*;
  * Handles the client interactions with the server. Extends from {@code Thread} as its always listening while the client
  * is connected. Every {@code ClientHandler} manages a client and creates a Thread to listen to it.
  * <br/> <br/>
- * Note {@version 1.0.0}: This class is now prepared to handle a client who asks for txt file manipulation (In future
+ * Note version 1.0.0: This class is now prepared to handle a client who asks for txt file manipulation (In future
  * version it will be separated in {@code ClientHandler} and {@code ClientHandlerTxtEditor extends ClientHandler}
  */
 public class ClientHandler extends Thread {
@@ -150,7 +150,8 @@ public class ClientHandler extends Thread {
                 disconnectFromFile();
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Cambiar esta linea por notificacion o algo asi
+            System.err.println("ERROR DISPOSING CLIENT " + this.getClientName());
+            System.err.println(e.getMessage());
         }
     }
 

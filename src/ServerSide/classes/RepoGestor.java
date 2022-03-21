@@ -85,7 +85,7 @@ public class RepoGestor {
     public FileResource createFile(String fileName) throws IOException {
         FileResource newFile = null;
         if (this.findFileByName(fileName) == null && !fileName.equals("")) {
-            newFile = new FileResource("Files/Server_Files/" + fileName); //TODO Avisar de como ha ido la creacion
+            newFile = new FileResource("Files/Server_Files/" + fileName);
             if (newFile.createNewFile())
                 fileResources.add(newFile);
             else

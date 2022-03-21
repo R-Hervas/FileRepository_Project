@@ -39,6 +39,7 @@ public interface ClientListener {
      * Manages a message sent by the client to the server
      * @param client - who sent the message
      * @param messageType - defines the behaviour of the server
+     * @param message
      */
     void onMessageReceived(ClientHandler client, String message, int messageType);
 }

@@ -8,14 +8,37 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * Basic class to define server. This class must be inherited by any implementation of a server.
+ */
 public class ServerBase implements ServerInterface {
 
+    /**
+     * Name of the server
+     */
     protected String name;
+    /**
+     * Listening port for the server
+     */
     protected int port;
+    /**
+     * List of handlers listening clients in the server
+     */
     protected ArrayList<ClientHandler> clientHandlers;
+    /**
+     * Server Socket
+     */
     protected ServerSocket listenerSocket = null;
-    protected boolean isRunning; // TODO use isInterrupted() instead
+    /**
+     * True if the server is listening, false otherwise
+     */
+    protected boolean isRunning;
 
+    /**
+     * Constructor of the class
+     * @param name
+     * @param port - Must be known by the client in order to stablish connection
+     */
     public ServerBase(String name, int port) {
         this.name = name;
         this.port = port;
