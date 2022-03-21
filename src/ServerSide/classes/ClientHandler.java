@@ -67,6 +67,11 @@ public class ClientHandler extends Thread {
         sendMessage(ServerInterface.SERVER_CONNECTED);
     }
 
+    /**
+     * When ClientHandler is Running, listens all messages the associated client send and manages them depending on the
+     * information it carries. As the ClientHandler receives a message it reads line by line and handles the message. If
+     * the client`s message it`s null, the server understands the client has disconnected.
+     */
     @Override
     public void run() {
 
@@ -87,7 +92,11 @@ public class ClientHandler extends Thread {
         }
     }
 
-     public void sendMessage(String msg) {
+    /**
+     * Sends a normal message to the client if it`s not possible sends an error
+     * @param msg - messsage sent to the client
+     */
+    public void sendMessage(String msg) {
         try {
             new PrintWriter(socket.getOutputStream(), true).println(msg);
         } catch (IOException e) {
@@ -95,6 +104,20 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Handles a message from the client. First applies the basic behaviour as a response for a message and then applies
+     * two possible special responses:
+     *
+     * <ul>
+     *     <li>
+     *         #CLIENT_DISCONNECTED -> Disconnects the client from the server
+     *     </li>
+     *     <li>
+     *         #NICKNAME -> Changes the client name
+     *     </li>
+     * </ul>
+     * @param msg - messsage sent to the client
+     */
     private void handleMessage(String msg) {
 
         listener.onMessageReceived(this, msg, ClientListener.MESSAGE_TYPE_CLIENT);
@@ -107,11 +130,17 @@ public class ClientHandler extends Thread {
 
     }
 
-
+    /**
+     * Notifies the client it`s disconnection to the server
+     * @param disconnectMsg
+     */
     private void notifyClientDisconnect(@SuppressWarnings("SameParameterValue") String disconnectMsg) {
         listener.onMessageReceived(this, disconnectMsg, ClientListener.MESSAGE_TYPE_NOTIFY);
     }
 
+    /**
+     * Defines the method to follow when the client handler is safetly disposed
+     */
     public void dispose() {
 
         try {
@@ -125,19 +154,34 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * @return the client name
+     */
     public String getClientName() {
         return (clientName.equals(default_nickname) ? getIpAddress() : clientName);
     }
 
+    /**
+     * Sets the client name
+     * @param clientName
+     */
     @SuppressWarnings("unused")
     public void setClientName(String clientName) {
         this.clientName = clientName;
     }
 
+    /**
+     * @return IP Address
+     */
     public String getIpAddress() {
         return this.socket.getRemoteSocketAddress().toString();
     }
 
+    /**
+     * Assigns a file to the client, while a file is connected to the client, it can`t be accessed by other client and
+     * this client can`t connect to a different file.
+     * @param fileResource
+     */
     public void setConnectionWithFile(FileResource fileResource) {
         if (fileResource.connect())
             this.fileResource = fileResource;
@@ -145,19 +189,37 @@ public class ClientHandler extends Thread {
             this.sendMessage(CLIENT_ERROR + "Recurso no disponible");
     }
 
+    /**
+     * Disconnects the client from the file it is was connected to one.
+     */
     public void disconnectFromFile(){
         if (this.fileResource != null){
             fileResource.disconnect();
             fileResource = null;
-            sendMessage(CLIENT_NOTIFICATION + "Liberando archivo");
+            sendMessage("Liberando archivo");
         }
     }
 
+    /**
+     * Updates the file text content with a new one.
+     *
+     * <ul>
+     *     <li>
+     *         CLIENT_NOTIFICATION_archivo actualizado -> Operation went correctly
+     *     </li>
+     *     <li>
+     *         CLIENT_ERROR_Error al acceder al archivo -> Error accessing the file
+     *     </li>
+     *     <li>
+     *         CLIENT_ERROR_Error al acceder al archivo -> The client is not connected to any file
+     *     </li>
+     * </ul>
+     * @param newFileText
+     */
     public void writeInResource(String newFileText){
         if (this.isConnectedToResource()) {
             try {
                 this.fileResource.setFileText(newFileText);
-                System.out.println("paso 2" + newFileText);
                 sendMessage(CLIENT_NOTIFICATION + "Archivo actualizado");
                 this.disconnectFromFile();
             } catch (IOException e) {
@@ -169,6 +231,20 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Gets the text content from the associated file.
+     * @return Text file content as a String, {@code  null} if error at connecting to file or the client is not associated
+     * to a file
+     *
+     * <ul>
+     *     <li>
+     *         CLIENT_ERROR_Error al acceder al archivo -> Error accessing the file
+     *     </li>
+     *     <li>
+     *         CLIENT_ERROR_El cliente no esta asociado a ningun archivo -> The client is not connected to any file
+     *     </li>
+     * </ul>
+     */
     public String readFromResource(){
         if (this.isConnectedToResource()) {
             try {
@@ -176,11 +252,16 @@ public class ClientHandler extends Thread {
             } catch (IOException e) {
                 sendMessage(CLIENT_ERROR + "Error al acceder al archivo");
                 this.disconnectFromFile();
-                return "";
+                return null;
             }
-        } else
-            return "";
+        } else {
+            sendMessage(CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
+            return null;
+        }
     }
 
+    /**
+     * @return true if client is connected to a file, false otherwise
+     */
     public boolean isConnectedToResource(){return (this.fileResource != null);}
 }

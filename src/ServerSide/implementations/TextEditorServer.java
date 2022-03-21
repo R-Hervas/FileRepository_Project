@@ -16,11 +16,41 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
         super(name, port);
     }
 
+    /**
+     * Sends a message notifying the connection
+     * @param client
+     */
     @Override
     public void onClientConnected(ClientHandler client) {
         client.sendMessage(CLIENT_NOTIFICATION + "Se ha conectado al repositorio de archivos");
     }
 
+    /**
+     * Responds to the message with different action
+     *
+     * <ul>
+     *     <li>
+     *         #CLIENT_GET_ -> Connects the client with a file and sends the content as a response
+     *     </li>
+     *     <li>
+     *         #CLIENT_POST_ -> Writes the content
+     *     </li>
+     *     <li>
+     *         #CLIENT_CREATE_FILE_ -> Creates a file i n the repository
+     *     </li>
+     *     <li>
+     *         #CLIENT_GET_FILE_LIST -> Returns the file list in the repository as a formatted String
+     *     </li>
+     *     <li>
+     *         #CLIENT_MESSAGE_NAME -> Changes the client name
+     *     </li>
+     *     <li>
+     *         If message doesn`t match with any condition it will show in the server console
+     *     </li>
+     * </ul>
+     * @param client
+     * @param message
+     */
     @Override
     public void onClientMessageReceived(ClientHandler client, String message) {
         System.out.println(message);
@@ -59,4 +89,14 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
             System.out.println("DEFAULT MESSAGE: " + getFormattedMessage(client, message));
         }
     }
+
+    /**
+     * Notifies all the clients and disconnects them from the server
+     */
+    @Override
+    public void onListeningStopped() {
+        broadcastMessage(null, CLIENT_NOTIFICATION + "El servidor se ha desconectado");
+        broadcastMessage(null, SERVER_DISCONNECTED);
+    }
+
 }

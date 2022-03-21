@@ -44,7 +44,7 @@ public class FileResource extends File {
      * @throws IOException - If file can't be accessed
      */
     public void setFileText(String text) throws IOException {
-        PrintWriter writer = new PrintWriter(this);
+        PrintWriter writer = new PrintWriter(this); //TODO comprobar que esto sobreescribe
         writer.print(text);
         writer.close();
     }

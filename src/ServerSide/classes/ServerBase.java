@@ -81,6 +81,11 @@ public class ServerBase implements ServerInterface {
         this.onClientConnected(handler);
     }
 
+    /**
+     * Sends a message to all clients connected except of the sender
+     * @param sender - client that sent the message
+     * @param message
+     */
     @Override
     public void broadcastMessage(ClientHandler sender, String message) {
         if (message != null)
@@ -89,7 +94,11 @@ public class ServerBase implements ServerInterface {
                     handler.sendMessage(message);
     }
 
-
+    /**
+     * If there`s an error removes the client handler from the list
+     * @param client
+     * @param message
+     */
     @Override
     public void onHandlerMessageReceived(ClientHandler client, String message) {
         if (message.equals(ClientListener.CLIENT_NOTIFY_DISCONNECT) || message.equals(ClientListener.CLIENT_NOTIFY_ERROR))
@@ -97,7 +106,8 @@ public class ServerBase implements ServerInterface {
     }
 
     /**
-     * Should never override this method
+     * Classifies and assigns a response for every type of message recieved from the client
+     * <br>Should never override this method<br/>
      */
     @Override
     public void onMessageReceived(ClientHandler client, String message, int messageType) {
@@ -109,10 +119,20 @@ public class ServerBase implements ServerInterface {
         }
     }
 
+    /**
+     * Formats a message
+     * @param handler
+     * @param message
+     * @return
+     */
     protected String getFormattedMessage(ClientHandler handler, String message){
         return handler.getClientName() + ": " + message;  //TODO No se cambia el nombre en el mensaje del cliente
     }
 
+    /**
+     * Returns the clientHandler list
+     * @return
+     */
     @SuppressWarnings("unused")
     public ArrayList<ClientHandler> getClientHandlers() {
         return clientHandlers;
