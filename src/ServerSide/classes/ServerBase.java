@@ -39,14 +39,13 @@ public class ServerBase implements ServerInterface {
                 createHandler(listenerSocket.accept());
         } catch (IOException e) {
             isRunning = false;
-            System.out.println("Errores durante el inicio del server\n" + e.toString());
+            System.out.println("Errores durante el inicio del server\n" + e.getMessage());
         }
     }
 
     /**
      * When overriding stopListening() keep in mind to call onListeningStopped()
      * At the end of your implementation
-     * @throws IOException
      */
     @Override
     public void stopListening() throws IOException {
@@ -62,7 +61,6 @@ public class ServerBase implements ServerInterface {
 
     /**
      * Call onClientDisconnected(ClientHandler) when overriding this method
-     * @param client
      */
     @Override
     public void removeHandler(ClientHandler client) {
@@ -74,7 +72,6 @@ public class ServerBase implements ServerInterface {
     /**
      * When you override createHandler(ClientHandler) Method keep in mind to call onClientConnected(ClientHandler)
      * as your handler get linked to your server.
-     * @param listenerSocket
      */
     @Override
     public void createHandler(Socket listenerSocket) {
@@ -94,45 +91,41 @@ public class ServerBase implements ServerInterface {
 
 
     @Override
-    public void onHandlerMessageRecived(ClientHandler client, String message) {
+    public void onHandlerMessageReceived(ClientHandler client, String message) {
         if (message.equals(ClientListener.CLIENT_NOTIFY_DISCONNECT) || message.equals(ClientListener.CLIENT_NOTIFY_ERROR))
             this.removeHandler(client);
     }
 
     /**
      * Should never override this method
-     * @param client
-     * @param message
-     * @param messageType
      */
     @Override
-    public void onMessageRecived(ClientHandler client, String message, int messageType) {
+    public void onMessageReceived(ClientHandler client, String message, int messageType) {
         synchronized (this) {
             if (messageType == ServerInterface.MESSAGE_TYPE_CLIENT)
-                this.onClientMessageRecived(client, message);
-            else if (messageType == ServerInterface.MESSAGE_TYPE_NOTIFY);
-                this.onHandlerMessageRecived(client, message);
+                this.onClientMessageReceived(client, message);
+            else if (messageType == ServerInterface.MESSAGE_TYPE_NOTIFY)
+                this.onHandlerMessageReceived(client, message);
         }
     }
 
     protected String getFormattedMessage(ClientHandler handler, String message){
-        String formattedMessage = handler.getClientName() + ": " + message;
-        return formattedMessage;
+        return handler.getClientName() + ": " + message;  //TODO No se cambia el nombre en el mensaje del cliente
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<ClientHandler> getClientHandlers() {
         return clientHandlers;
     }
 
 
-    /* Must be overriden */
+    /* Must be overridden */
     @Override
     public void onClientConnected(ClientHandler client) {
     }
 
     @Override
     public void onClientDisconnected(ClientHandler client) {
-
     }
 
     @Override
@@ -145,7 +138,7 @@ public class ServerBase implements ServerInterface {
 
     }
     @Override
-    public void onClientMessageRecived(ClientHandler client, String message) {
+    public void onClientMessageReceived(ClientHandler client, String message) {
 
     }
 

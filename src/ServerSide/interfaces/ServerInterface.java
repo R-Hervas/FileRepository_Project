@@ -4,31 +4,90 @@ import ServerSide.classes.ClientHandler;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 
-public interface ServerInterface extends ClientListener {
+/**
+ * Stablish the main communication protocol for server and it's basic methods
+ */
+public interface ServerInterface extends ClientListener{
 
-    public static String SERVER_DISCONNECTED = "#SERVER_DISCONNECTED";
-    public static String SERVER_CONNECTED = "#SERVER_CONNECTED";
+    /**
+     * Communication protocol for the server to communicate its disconnection to a client and prevent it from
+     * crashing
+     */
+    String SERVER_DISCONNECTED = "#SERVER_DISCONNECTED";
 
-    public void startListening();
+    /**
+     * Communication protocol for the server to communicate it is connected to a client
+     */
+    String SERVER_CONNECTED = "#SERVER_CONNECTED";
 
-    public abstract void stopListening() throws IOException;
 
-    public abstract void removeHandler(ClientHandler client); // !
+    /**
+     * Defines the behaviour of the server when it starts listening
+     */
+    void startListening();
 
-    public abstract void createHandler(Socket socket); // !
+    /**
+     * Defines the behaviour of the server when it stops listening
+     * @throws IOException
+     */
+    @SuppressWarnings("unused")
+    void stopListening() throws IOException;
 
-    public abstract void broadcastMessage(ClientHandler sender, String message); // ! - Pass null as ClientHandler to broadcast the message to everyone
+    /**
+     * Removes a client listener from the listening list
+     * @param client - client to remove from the listening list
+     */
+    void removeHandler(ClientHandler client); // !
 
-    public abstract void onHandlerMessageRecived(ClientHandler client, String message); // !
+    /**
+     * Creates a listener for a client
+     * @param socket - Socket for communication
+     */
+    void createHandler(Socket socket);
 
-    public abstract void onClientMessageRecived(ClientHandler client, String message);
+    /**
+     * Sends a message for all clients connected from one client
+     * @param sender - client that sent the message
+     * @param message
+     */
+    void broadcastMessage(ClientHandler sender, String message); // ! - Pass null as ClientHandler to broadcast the message to everyone
 
-    public abstract void onClientConnected(ClientHandler client);
+    /**
+     * Manages a status message from the client
+     * @param client
+     * @param message
+     */
+    void onHandlerMessageReceived(ClientHandler client, String message); // !
 
-    public abstract void onClientDisconnected(ClientHandler client);
+    /**
+     * Manages a text message from the client
+     * @param client
+     * @param message
+     */
+    void onClientMessageReceived(ClientHandler client, String message);
 
-    public abstract void onListeningStarted(int port);
+    /**
+     * Defines the behaviour when a clietn is connected
+     * @param client
+     */
+    void onClientConnected(ClientHandler client);
 
-    public abstract void onListeningStopped();
+    /**
+     * Defines the behaviour when a clietn is disconnected
+     * @param client
+     */
+    void onClientDisconnected(ClientHandler client);
+
+    /**
+     * Defines behaviour when the server starts listening
+     * @param port
+     */
+    void onListeningStarted(int port);
+
+    /**
+     * Defines bahaviour when the server stops listening
+     */
+    void onListeningStopped();
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class RepoGestor {
 
-    private ArrayList<FileResource> fileResources = new ArrayList<>();
+    private final ArrayList<FileResource> fileResources = new ArrayList<>();
     private static RepoGestor repoGestor;
 
     private RepoGestor() {
@@ -22,22 +22,25 @@ public class RepoGestor {
         return repoGestor;
     }
 
-    private void loadFilesInRepository() {
+    public void loadFilesInRepository() {
         File repositoryFolder = new File("Files/Server_Files");
         File[] filesInRepository = repositoryFolder.listFiles(new TxtFileFilter());
 
-        if (fileResources != null)
-            fileResources.clear();
+        fileResources.clear();
 
-        for (File txtFile :
-                filesInRepository) {
-            fileResources.add(new FileResource(txtFile.getPath()));
+        if (filesInRepository != null) {
+            for (File txtFile :
+                    filesInRepository) {
+                fileResources.add(new FileResource(txtFile.getPath()));
+            }
+
+            System.out.println(getFileListAsString());
+        } else {
+            System.out.println("Repositorio vacio");
         }
-
-        System.out.println(getFileList());
     }
 
-    public String getFileList() {
+    public String getFileListAsString() {
         StringBuilder fileList = new StringBuilder();
         if (fileResources.size() != 0) {
             for (File file : fileResources){
@@ -50,10 +53,12 @@ public class RepoGestor {
 
     public FileResource createFile(String fileName) throws IOException {
         FileResource newFile = null;
-        if (this.findFileByName(fileName) == null) {
-            newFile = new FileResource("Files/Server_Files/" + fileName);
-            newFile.createNewFile();
-            fileResources.add(newFile);
+        if (this.findFileByName(fileName) == null && !fileName.equals("")) {
+            newFile = new FileResource("Files/Server_Files/" + fileName); //TODO Avisar de como ha ido la creacion
+            if (newFile.createNewFile())
+                fileResources.add(newFile);
+            else
+                newFile = null;
         }
         return newFile;
     }

@@ -8,10 +8,9 @@ import ServerSide.interfaces.TextFileServerInterface;
 
 import java.io.IOException;
 
-
 public class TextEditorServer extends ServerBase implements TextFileServerInterface {
 
-    private RepoGestor repository = RepoGestor.getRepoGestorInstance();
+    private final RepoGestor repository = RepoGestor.getRepoGestorInstance();
 
     public TextEditorServer(String name, int port) {
         super(name, port);
@@ -19,13 +18,12 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
 
     @Override
     public void onClientConnected(ClientHandler client) {
-        super.onClientConnected(client);
-        client.sendMessage(CLIENT_NOTIFICATION + "Bienvenido a repositorio de archivos");
-        client.sendMessage(CLIENT_ERROR + "VAMOS A MORIR TODOS!!!!");
+        client.sendMessage(CLIENT_NOTIFICATION + "Se ha conectado al repositorio de archivos");
     }
 
     @Override
-    public void onClientMessageRecived(ClientHandler client, String message) {
+    public void onClientMessageReceived(ClientHandler client, String message) {
+        System.out.println(message);
         if (message.matches("^" + CLIENT_GET_FILE + "[\\w ]+\\.txt?")){
             if (!client.isConnectedToResource()) {
                 String requestedFileName = message.replace(CLIENT_GET_FILE, "");
@@ -34,32 +32,31 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
                     client.setConnectionWithFile(requestedFile);
                     client.sendMessage(CLIENT_GET_FILE + client.readFromResource());
                 } else {
-                    client.sendMessage(CLIENT_NOTIFICATION + "El recurso no se encuentra disponible");
+                    client.sendMessage(CLIENT_ERROR + "El recurso no se encuentra disponible");
                 }
             } else {
-                client.sendMessage(CLIENT_NOTIFICATION + "El cliente ya se encuentra usando un recurso");
+                client.sendMessage(CLIENT_ERROR + "El cliente ya se encuentra usando un recurso");
             }
         } else if (message.matches("^" + CLIENT_POST_FILE + ".*?")){
             if (client.isConnectedToResource()){
                 client.writeInResource(message.replace(CLIENT_POST_FILE, ""));
+                System.out.println("paso 1" + message);
             } else {
                 client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El cliente no esta asociado a ningun archivo");
             }
         } else if (message.matches("^" + CLIENT_CREATE_FILE + "[\\w ]+\\.txt?")){
-            if (!client.isConnectedToResource()){
                 try {
                     repository.createFile(message.replace(CLIENT_CREATE_FILE, ""));
+                    client.sendMessage(TextFileServerInterface.CLIENT_CREATE_FILE + message);
                 } catch (IOException e) {
-                    client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El archivo ya existe");
+                    client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El archivo no se puede crear");
                 }
-            } else {
-                client.sendMessage(CLIENT_NOTIFICATION + "El cliente ya se encuentra usando un recurso");
-            }
         } else if (message.matches(CLIENT_GET_FILE_LIST)){
-            client.sendMessage(CLIENT_GET_FILE_LIST + repository.getFileList());
+            client.sendMessage(CLIENT_GET_FILE_LIST + repository.getFileListAsString());
+        } else if (message.matches("^" + CLIENT_MESSAGE_NAME + "\\.*?")) {
+            System.out.println(getFormattedMessage(client, message.replace(CLIENT_MESSAGE_NAME, "") + "Se ha conectado al servidor"));
         } else {
-            System.out.println("client: " + message);
+            System.out.println("DEFAULT MESSAGE: " + getFormattedMessage(client, message));
         }
-
     }
 }

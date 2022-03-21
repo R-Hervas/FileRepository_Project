@@ -26,7 +26,7 @@ public interface TextFileServerInterface {
      * command won´t work)
      * <ul>
      * <li>
-     * Sent by client: {@code #CLIENT_POST_archivo.txt}
+     * Sent by client: {@code #CLIENT_POST_En un lugar de la mancha}
      * </li>
      * <li>
      * Response from the server: {@code #CLIENT_NOTIFICATION_ or #CLIENT_ERROR_}
