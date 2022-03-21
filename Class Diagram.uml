@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/herva/OneDrive/Documentos/NetBeansProjects/FileRepository_Project/src</OriginalElement>
+  <nodes>
+    <node x="13.0" y="158.0">ServerSide.classes.ServerBase</node>
+    <node x="171.0" y="385.0">Mains.MainServer</node>
+    <node x="5.0" y="0.0">ServerSide.interfaces.ClientListener</node>
+    <node x="151.0" y="158.0">ServerSide.interfaces.TextFileServerInterface</node>
+    <node x="0.0" y="311.0">ServerSide.classes.ClientHandler</node>
+    <node x="180.0" y="311.0">ServerSide.Models.FileResource</node>
+    <node x="337.0" y="385.0">ServerSide.helpers.TxtFileFilter</node>
+    <node x="0.0" y="385.0">ServerSide.classes.RepoGestor</node>
+    <node x="0.0" y="79.0">ServerSide.interfaces.ServerInterface</node>
+    <node x="82.5" y="237.0">ServerSide.implementations.TextEditorServer</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ServerSide.classes.ServerBase" target="ServerSide.interfaces.ServerInterface" relationship="REALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="ServerSide.interfaces.ServerInterface" target="ServerSide.interfaces.ClientListener" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="ServerSide.implementations.TextEditorServer" target="ServerSide.classes.ServerBase" relationship="GENERALIZATION">
+      <point x="-38.25" y="-14.5" />
+      <point x="120.75" y="212.0" />
+      <point x="72.0" y="212.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="ServerSide.implementations.TextEditorServer" target="ServerSide.interfaces.TextFileServerInterface" relationship="REALIZATION">
+      <point x="38.25" y="-14.5" />
+      <point x="197.25" y="212.0" />
+      <point x="246.0" y="212.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="true" x="228.5" y="207.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
