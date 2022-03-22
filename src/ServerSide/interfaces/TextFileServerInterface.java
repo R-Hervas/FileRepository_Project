@@ -70,6 +70,9 @@ public interface TextFileServerInterface {
     String CLIENT_GET_FILE_LIST = "#CLIENT_LIST_";
 
 
+    String CLIENT_RELEASE_FILE = "#CLIENT_RELEASE_FILE_";
+
+
     /**
      * Protocol for notification communication between server and client
      */

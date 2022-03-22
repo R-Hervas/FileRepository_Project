@@ -96,6 +96,13 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
                 } catch (IOException e) {
                     client.sendMessage(TextFileServerInterface.CLIENT_ERROR + "El archivo no se puede crear");
                 }
+        } else if (message.matches(CLIENT_RELEASE_FILE)) {
+            if (client.isConnectedToResource()){
+                client.disconnectFromFile();
+                client.sendMessage(CLIENT_NOTIFICATION + "Liberando fichero");
+            } else {
+                client.sendMessage(CLIENT_ERROR + "El cliente no tiene asociado ningun fichero");
+            }
         } else if (message.matches(CLIENT_GET_FILE_LIST)){
             client.sendMessage(CLIENT_GET_FILE_LIST + repository.getFileListAsString());
         } else if (message.matches("^" + CLIENT_MESSAGE_NAME + ".*?")) {
