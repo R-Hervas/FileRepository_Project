@@ -194,6 +194,7 @@ public class TextEditorServer extends ServerBase implements TextFileServerInterf
         if (fileResource != null && fileResource.isAvaliable()) {
             if (fileResource.delete()){
                 client.sendMessage(CLIENT_NOTIFICATION + "Fichero borrado");
+                repository.loadFilesInRepository();
                 broadcastMessage(null, CLIENT_GET_FILE_LIST + repository.getFileListAsString());
             } else {
                 client.sendMessage(CLIENT_ERROR + "Error al borrar el fichero");
