@@ -1,5 +1,7 @@
 package ServerSide.interfaces;
 
+import ServerSide.classes.ClientHandler;
+
 /**
  * Defines the communication protocol with the client
  */
@@ -53,6 +55,8 @@ public interface TextFileServerInterface {
      */
     String CLIENT_CREATE_FILE = "#CLIENT_CREATE_";
 
+    String CLIENT_DELETE_FILE = "#CLIENT_DELETE_";
+
     /**
      * Communication protocol for the client to ask for the list of files in the
      * file repository
@@ -81,5 +85,17 @@ public interface TextFileServerInterface {
      * Protocol for error communication between server and client
      */
     String CLIENT_ERROR = "#CLIENT_ERROR_";
+
+    void createFile(ClientHandler client, String message);
+
+    void getFile(ClientHandler client, String message);
+
+    void postFile(ClientHandler client, String message);
+
+    void releaseFile(ClientHandler client, String message);
+
+    void deleteFile(ClientHandler client, String message);
+
+
 
 }

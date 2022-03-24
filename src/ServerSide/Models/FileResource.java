@@ -61,7 +61,10 @@ public class FileResource extends File {
         while ((textLine = bufferedReader.readLine()) != null){
             fileText.append(textLine);
         }
+        bufferedReader.close();
         return fileText.toString();
     }
+
+    public boolean isAvaliable(){return available.availablePermits() >= 1; }
 
 }

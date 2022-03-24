@@ -183,11 +183,12 @@ public class ClientHandler extends Thread {
      * this client can`t connect to a different file.
      * @param fileResource
      */
-    public void setConnectionWithFile(FileResource fileResource) {
-        if (fileResource.connect())
+    public boolean setConnectionWithFile(FileResource fileResource) {
+        if (fileResource.connect()) {
             this.fileResource = fileResource;
-        else
-            this.sendMessage(CLIENT_ERROR + "Recurso no disponible");
+            return true;
+        } else
+            return false;
     }
 
     /**
