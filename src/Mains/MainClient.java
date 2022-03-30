@@ -1,20 +1,12 @@
 package Mains;
 
-import ClientSide.implementations.ChatClient;
-
-import java.util.Scanner;
+import ClientSide.implementations.FileRepositoryClient;
 
 public class MainClient {
 
     public static void main(String[] args) {
 
-        Scanner sn = new Scanner(System.in);
-
-        ChatClient chatClient = new ChatClient("Chat_Client");
-
-        chatClient.connect("localhost", 6969);
-
-        while (true)
-            chatClient.sendMessage(sn.nextLine());
+    	FileRepositoryClient client = new FileRepositoryClient("Chris");
+    	client.connect("172.30.1.192", 6969);
     }
 }
