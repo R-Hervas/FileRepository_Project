@@ -2,8 +2,11 @@ package front;
 
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import java.awt.Color;
+import java.awt.Image;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,9 +20,12 @@ public class FileRepositoryFrame extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 500, 500);
-		
 		setBackground(Color.white);
 		
+		Image icon = new ImageIcon(getClass().getResource("../icons/icon.png")).getImage();
+        setIconImage(icon);
+        setResizable(false);
+        setTitle("Textmark");
 		setContentPanel(new FileExplorerPanel(listener,this));
 	}
 	

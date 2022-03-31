@@ -3,9 +3,7 @@ package ClientSide.implementations;
 import java.io.IOException;
 
 import ClientSide.classes.BaseClient;
-import front.FileEditorFrame;
 import front.FileEditorPanel;
-import front.FileExplorerFrame;
 import front.FileExplorerPanel;
 import front.FileRepositoryFrame;
 import front.OnFileExplorerClientListener;

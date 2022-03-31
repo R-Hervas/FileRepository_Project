@@ -28,12 +28,12 @@ public class FileEditorPanel extends JPanel implements ActionListener {
 		this.frame = frame;
 		
 		setBounds(0, 0, 500, 488);
-		setBackground(new Color(45,45,45));
+		setBackground(Color.WHITE);
 		
 		btnSave = new FileRepositoryButton(
 				new Color(0, 169, 255),
-				Color.white,
-				new Color(45,45,45),
+				Color.WHITE,
+				Color.WHITE,
 				"../icons/iddleSave.png",
 				"../icons/hoverSave.png"
 		);
@@ -44,8 +44,8 @@ public class FileEditorPanel extends JPanel implements ActionListener {
 		
 		btnExit = new FileRepositoryButton(
 				new Color(255, 63, 63),
-				Color.white,
-				new Color(45,45,45),
+				Color.WHITE,
+				Color.WHITE,
 				"../icons/iddleOut.png",
 				"../icons/hoverOut.png"
 		);
@@ -54,9 +54,9 @@ public class FileEditorPanel extends JPanel implements ActionListener {
 		this.add(btnExit);
 		
 		taEditor = new JTextArea();
-		taEditor.setBackground(Color.DARK_GRAY);
+		taEditor.setBackground(new Color(213,232,255));
 		taEditor.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-		taEditor.setForeground(Color.WHITE);
+		taEditor.setForeground(Color.BLACK);
 		taEditor.setLineWrap(true);
 		taEditor.setBounds(26, 23, 440, 374);
 		taEditor.setText(text);

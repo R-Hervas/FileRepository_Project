@@ -33,7 +33,7 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 	public FileExplorerPanel(OnFileExplorerClientListener listener, FileRepositoryFrame frame) {
 		
 		setBounds(0, 0, 500, 500);
-		setBackground(new Color(45,45,45));
+		setBackground(Color.white);
 		
 		this.listener = listener;
 		this.frame = frame;
@@ -41,11 +41,11 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 		// LIST -------------------------------------------------
 		list = new JList<>();
 		list.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-		list.setForeground(Color.WHITE);
-		list.setBackground(Color.DARK_GRAY);
+		list.setForeground(Color.BLACK);
+		list.setBackground(Color.WHITE);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
-		list.setSelectionBackground(Color.WHITE);
-		list.setSelectionForeground(Color.DARK_GRAY);
+		list.setSelectionBackground(new Color(0, 169, 255));
+		list.setSelectionForeground(Color.WHITE);
 		
 		model = new DefaultListModel<>();
 		setLayout(null);
@@ -60,7 +60,7 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 		btnEdit = new FileRepositoryButton(
 				new Color(0, 169, 255),
 				Color.white,
-				new Color(45,45,45),
+				Color.white,
 				"../icons/iddleEdit.png",
 				"../icons/hoverEdit.png"
 		);
@@ -69,9 +69,9 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 		this.add(btnEdit);
 		
 		btnAdd = new FileRepositoryButton(
-				new Color(33, 217, 115),
+				new Color(0, 169, 255),
 				Color.white,
-				new Color(45,45,45),
+				Color.white,
 				"../icons/iddleAdd.png",
 				"../icons/hoverAdd.png"
 		);
@@ -82,7 +82,7 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 		btnRemove  = new FileRepositoryButton(
 				new Color(255, 63, 63),
 				Color.white,
-				new Color(45,45,45),
+				Color.white,
 				"../icons/iddleDelete.png",
 				"../icons/hoverDelete.png"
 		);
@@ -92,8 +92,8 @@ public class FileExplorerPanel extends JPanel implements ActionListener {
 		
 		tfNewElement = new JTextField();
 		tfNewElement.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-		tfNewElement.setForeground(new Color(255, 255, 255));
-		tfNewElement.setBackground(Color.DARK_GRAY);
+		tfNewElement.setForeground(Color.BLACK);
+		tfNewElement.setBackground(Color.WHITE);
 		tfNewElement.setBounds(23, 50, 429, 32);
 		tfNewElement.setColumns(10);
 		this.add(tfNewElement);
